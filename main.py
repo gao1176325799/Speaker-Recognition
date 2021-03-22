@@ -301,3 +301,11 @@ earlystopping_cb = keras.callbacks.EarlyStopping(patience=10, restore_best_weigh
 mdlcheckpoint_cb = keras.callbacks.ModelCheckpoint(
     model_save_filename, monitor="val_accuracy", save_best_only=True
 )
+
+#trainning
+history = model.fit(
+    train_ds,
+    epochs=EPOCHS,
+    validation_data=valid_ds,
+    callbacks=[earlystopping_cb, mdlcheckpoint_cb],
+)
