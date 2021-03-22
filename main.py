@@ -88,21 +88,6 @@ print(
         len(noise_paths), len(os.listdir(DATASET_NOISE_PATH))
     )
 )
-# part 3 is ok now to resample all noise samples to 16000Hz
-# command = (
-#     "for dir in `ls -1 " + DATASET_NOISE_PATH + "`; do "
-#     "for file in `ls -1 " + DATASET_NOISE_PATH + "/$dir/*.wav`; do "
-#     "sample_rate=`ffprobe -hide_banner -loglevel panic -show_streams "
-#     "$file | grep sample_rate | cut -f2 -d=`; "
-#     "if [ $sample_rate -ne 16000 ]; then "
-#     "ffmpeg -hide_banner -loglevel panic -y "
-#     "-i $file -ar 16000 temp.wav; "
-#     "mv temp.wav $file; "
-#     "fi; done; done"
-# )
-# os.system(command)
-os.listdir(r'C:\Users\Victor\Downloads\16000_pcm_speeches\noise\other')
-
 
 def findALLFiles(base):
     for root, ds, fs in os.walk(base):
