@@ -4,7 +4,7 @@ import numpy as np
 
 import tensorflow as tf
 from tensorflow import keras
-
+import soundfile as sf
 from pathlib import Path
 from IPython.display import display, Audio
 
@@ -70,7 +70,7 @@ for folder in os.listdir(DATASET_ROOT):
                 os.path.join(DATASET_ROOT, folder),
                 os.path.join(DATASET_AUDIO_PATH, folder),
             )
-print( 'part 2 is ok')
+print('part 2 is ok')
 # part 2 is ok
 # Get the list of all noise files
 noise_paths = []
@@ -88,20 +88,41 @@ print(
         len(noise_paths), len(os.listdir(DATASET_NOISE_PATH))
     )
 )
-#part 3 is ok now to resample all noise samples to 16000Hz
-command = (
-    "for dir in `ls -1 " + DATASET_NOISE_PATH + "`; do "
-    "for file in `ls -1 " + DATASET_NOISE_PATH + "/$dir/*.wav`; do "
-    "sample_rate=`ffprobe -hide_banner -loglevel panic -show_streams "
-    "$file | grep sample_rate | cut -f2 -d=`; "
-    "if [ $sample_rate -ne 16000 ]; then "
-    "ffmpeg -hide_banner -loglevel panic -y "
-    "-i $file -ar 16000 temp.wav; "
-    "mv temp.wav $file; "
-    "fi; done; done"
-)
-os.system(command)
+# part 3 is ok now to resample all noise samples to 16000Hz
+# command = (
+#     "for dir in `ls -1 " + DATASET_NOISE_PATH + "`; do "
+#     "for file in `ls -1 " + DATASET_NOISE_PATH + "/$dir/*.wav`; do "
+#     "sample_rate=`ffprobe -hide_banner -loglevel panic -show_streams "
+#     "$file | grep sample_rate | cut -f2 -d=`; "
+#     "if [ $sample_rate -ne 16000 ]; then "
+#     "ffmpeg -hide_banner -loglevel panic -y "
+#     "-i $file -ar 16000 temp.wav; "
+#     "mv temp.wav $file; "
+#     "fi; done; done"
+# )
+# os.system(command)
 os.listdir(r'C:\Users\Victor\Downloads\16000_pcm_speeches\noise\other')
+
+
+def findALLFiles(base):
+    for root, ds, fs in os.walk(base):
+        for f in fs:
+            if f.endswith('.wav'):
+                fullname = os.path.join(root, f)
+                yield fullname
+
+
+base = 'C:/Users/Victor/Downloads/16000_pcm_speeches/noise'
+for i in findALLFiles(base):
+    print(i)
+    data, SR =sf.read(i)
+    print(SR)
+    sf.write(i, data, samplerate=16000, subtype='PCM_16')
+    print("converting" + i + "to 16-bit")
+    data, rate = sf.read(i)
+    print('sampling rate is ', rate)
+
+
 # Split noise into chunks of 16,000 steps each
 def load_noise_sample(path):
     sample, sampling_rate = tf.audio.decode_wav(
