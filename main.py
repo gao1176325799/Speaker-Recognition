@@ -7,7 +7,9 @@ from tensorflow import keras
 import soundfile as sf
 from pathlib import Path
 from IPython.display import display, Audio
-
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 0.9
+tf.compat.v1.keras.backend.set_session(tf.compat.v1.Session(config=config))
 # Get the data from https://www.kaggle.com/kongaevans/speaker-recognition-dataset/download
 # and save it to the 'Downloads' folder in your HOME directory
 DATASET_ROOT = os.path.join(os.path.expanduser("~"), "Downloads/16000_pcm_speeches")
@@ -36,7 +38,6 @@ SAMPLING_RATE = 16000
 #   noisy_sample = sample + noise * prop * scale
 #      where prop = sample_amplitude / noise_amplitude
 SCALE = 0.5
-
 BATCH_SIZE = 128
 EPOCHS = 100
 print('part 1 is ok')
